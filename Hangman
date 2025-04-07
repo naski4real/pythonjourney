@@ -1,0 +1,103 @@
+import random
+
+hangmanpics = ["""
+  +---+
+  |   |
+      |
+      |
+      |
+      |
+=========""", """
+  +---+
+  |   |
+  O   |
+      |
+      |
+      |
+=========""", """
+  +---+
+  |   |
+  O   |
+  |   |
+      |
+      |
+=========""", """
+  +---+
+  |   |
+  O   |
+ /|   |
+      |
+      |
+=========""", """
+  +---+
+  |   |
+  O   |
+ /|\\  |
+      |
+      |
+=========""", """
+  +---+
+  |   |
+  O   |
+ /|\\  |
+ /    |
+      |
+=========""", """
+  +---+
+  |   |
+  O   |
+ /|\\  |
+ / \\  |
+      |
+========="""
+]
+
+words = ["coconut", "avocado", "guacamole", "banana", "cherry", "laptop", "mouse", "mousewheel", "mousepad"]
+
+chosen_word = random.choice(words)
+chosen_word_length = len(chosen_word)
+hidden = ["_"] * chosen_word_length
+
+# track guessed letters
+guessed_letters = []
+
+# track lives
+chances = 0
+max_chances = len(hangmanpics) - 1
+
+print(chosen_word)  # for testing
+
+print(" ".join(hidden))
+print(f"Lives left: {max_chances - chances}")
+
+while chances <= max_chances:
+    chosen_letter = input("Choose your letter: ").lower()
+
+    # check if letter was already guessed
+    if chosen_letter in guessed_letters:
+        print(f"You already guessed '{chosen_letter}'. Try a different letter.")
+        continue
+    else:
+        guessed_letters.append(chosen_letter)
+
+    # check if letter is in the word
+    if chosen_letter in chosen_word:
+        for i in range(chosen_word_length):
+            if chosen_word[i] == chosen_letter:
+                hidden[i] = chosen_letter
+    else:
+        print(hangmanpics[chances])
+        chances += 1
+
+    # progress and lives
+    print(" ".join(hidden))
+    print(f"Lives left: {max_chances - chances}")
+    print(f"Guessed letters: {', '.join(guessed_letters)}")
+
+    # win?
+    if "_" not in hidden:
+        print("GG you won!")
+        break
+
+else:
+    print(f"You lost! The word was: '{chosen_word}'.")
